@@ -1,0 +1,11 @@
+/Luckfox_Lyra_SDK_*.tar.gz
+lyra-sdk/
+hisptoot-drivers/
+debootstrap/
+picocalc-install/
+boot/
+rootfs/
+picocalc-sd-*.img
+Luckfox-Lyra-B-pinout.jpg
+devicetree-overlay/*.dtbo
+*.preproccessed
