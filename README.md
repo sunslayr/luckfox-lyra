@@ -1,6 +1,28 @@
 # luckfox-lyra
 Luckfox Lyra, Rockchip RK3506 development.
 
+## Install Docker and qemu
+- Setup docker for multiplatform
+```
+docker run --privileged --rm tonistiigi/binfmt --install all; \
+sudo mkdir -p /etc/docker/
+```
+- Configure docker
+```
+sudo cat <<EOF | sudo tee /etc/docker/daemon.json
+{
+  "features": {
+    "containerd-snapshotter": true
+  }
+}
+EOF
+```
+- Restart docker
+```
+sudo systemctl restart docker
+```
+
+## Prepare SD card
 - Extract SDK
 ```
 mkdir lyra-sdk && tar -xvzf Luckfox_Lyra_SDK_*.tar.gz -C ./lyra-sdk
@@ -64,12 +86,13 @@ sudo cp -r lyra-sdk/kernel-6.1/tar-install/lib/* lyra-rootfs/usr/lib/; \
 sudo cp -r lyra-sdk/kernel/usr/include lyra-rootfs/usr ; \
 sudo cp source/scripts/*.service lyra-rootfs/etc/systemd/system; \
 sudo cp source/scripts/usb-gadget lyra-rootfs/usr/local/bin/; \
+```
+- Chroot
+```
 sudo chroot lyra-rootfs
 ```
 - Update
 ```
-sudo -s
-
 cat <<EOF > /etc/apt/sources.list
 deb http://ports.ubuntu.com/ubuntu-ports jammy main universe restricted multiverse
 deb http://ports.ubuntu.com/ubuntu-ports jammy-updates main universe restricted multiverse
@@ -93,6 +116,10 @@ apt install -y git ssh make libssl-dev \
 ```
 - Setup network and fs
 ```
+cat <<EOF > /etc/modules.load.d/usb-gadget.conf
+# Load libcomposite.ko at boot
+libcomposite
+EOF
 cat <<EOF >> /etc/fstab
 /dev/mmcblk0p3 / ext4 rw,relatime 0 0
 /dev/mmcblk0p2 none swap sw 0 0
@@ -116,11 +143,12 @@ systemctl enable systemd-networkd \
 getty@ttyGS0 \
 usb-gadget; \
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config; \
-passwd root
+passwd root; \
+depmod -b /usr/lib/modules/6.1.99/ -a; \
+hostname lyra
 ```
 - Done
 ```
-exit
 exit
 exit
 ```

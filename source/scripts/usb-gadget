@@ -11,6 +11,12 @@
 # https://github.com/RoganDawes/P4wnP1/blob/master/boot/init_usb.sh
 # https://www.collabora.com/news-and-blog/blog/2019/02/18/modern-usb-gadget-on-linux-and-how-to-integrate-it-with-systemd-part-1/
 
+if [ ! -d "/sys/kernel/config/usb_gadget" ]; then
+  echo "usb-gadget - Module not loaded!"
+  echo "usb-gadget - Inserting now"
+  insmod /usr/lib/modules/6.1.99/kernel/drivers/usb/gadget/libcomposite.ko
+fi
+
 cd /sys/kernel/config/usb_gadget/
 
 mkdir g1 && cd g1
@@ -65,7 +71,7 @@ ls /sys/class/udc > UDC
 ip link set usb0 up
 ip link set usb1 up
 
-echo "usb-gadget initialized"
+echo "usb-gadget - Initialized"
 
 #Serial creates ttyGS0
 #systemctl enable getty@ttyGS0.service
