@@ -65,6 +65,7 @@ exit
 ```
 sudo ./lyra-sdk/tools/linux/Linux_Upgrade_Tool/Linux_Upgrade_Tool/upgrade_tool wl 0x2000 lyra-sdk/u-boot/uboot.img ; \
 sudo ./lyra-sdk/tools/linux/Linux_Upgrade_Tool/Linux_Upgrade_Tool/upgrade_tool wl 0x4000 lyra-sdk/kernel-6.1/zboot.img
+sudo ./lyra-sdk/tools/linux/Linux_Upgrade_Tool/Linux_Upgrade_Tool/upgrade_tool UL ./lyra-sdk/u-boot/rk3506_spl_loader_v1.04.110.bin
 ```
 - Arm docker
 ```
